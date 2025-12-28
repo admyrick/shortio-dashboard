@@ -5,3 +5,11 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Disable Turbopack for build
+  // Remove this line to use Turbopack again once it's more stable
+}
+
+module.exports = nextConfig
