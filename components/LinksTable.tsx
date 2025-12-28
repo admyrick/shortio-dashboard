@@ -71,7 +71,6 @@ export function LinksTable() {
   
   return (
     <div className="space-y-6">
-      {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white p-6 rounded-lg shadow">
@@ -105,7 +104,6 @@ export function LinksTable() {
         </div>
       )}
       
-      {/* Search */}
       <div className="bg-white p-4 rounded-lg shadow">
         <input
           type="text"
@@ -119,7 +117,6 @@ export function LinksTable() {
         />
       </div>
       
-      {/* Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -156,64 +153,55 @@ export function LinksTable() {
                   </td>
                 </tr>
               ) : (
-                links.map((link) => (
-                  <tr key={link.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        
-                          href={link.short_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline font-mono text-sm"
-                        >
-                          {link.short_url}
-                        </a>
-                        <button
-                          onClick={() => copyToClipboard(link.short_url)}
-                          className="text-gray-400 hover:text-gray-600"
-                        >
-                          <Copy className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm">
-                        {link.title && (
-                          <div className="font-medium text-gray-900 mb-1">
-                            {link.title}
-                          </div>
-                        )}
-                        <div className="text-gray-500 truncate max-w-md">
-                          {link.original_url}
+                links.map((link) => {
+                  const shortUrl = link.short_url;
+                  const originalUrl = link.original_url;
+                  
+                  return (
+                    <tr key={link.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <a href={shortUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-mono text-sm">
+                            {shortUrl}
+                          </a>
+                          <button onClick={() => copyToClipboard(shortUrl)} className="text-gray-400 hover:text-gray-600">
+                            <Copy className="w-4 h-4" />
+                          </button>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                        {link.clicks}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(link.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      
-                        href={link.original_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-900"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm">
+                          {link.title && (
+                            <div className="font-medium text-gray-900 mb-1">
+                              {link.title}
+                            </div>
+                          )}
+                          <div className="text-gray-500 truncate max-w-md">
+                            {originalUrl}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                          {link.clicks}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(link.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <a href={originalUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-900">
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
         
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
             <div className="text-sm text-gray-700">
@@ -223,15 +211,13 @@ export function LinksTable() {
               <button
                 onClick={() => setPage(p => Math.max(0, p - 1))}
                 disabled={page === 0}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                 Previous
               </button>
               <button
                 onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                 disabled={page >= totalPages - 1}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                 Next
               </button>
             </div>
