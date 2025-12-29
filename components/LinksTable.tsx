@@ -5,6 +5,7 @@ import { ExternalLink, Copy, TrendingUp, Edit2, Trash2, Download, Eye, RefreshCw
 import { EditLinkModal } from './EditLinkModal';
 import { Filters } from './Filters';
 import { LinkPreview } from './LinkPreview';
+import { PREDEFINED_GROUPS, applyGroupFilters } from '@/lib/predefinedGroups';
 
 interface Link {
   id: number;
@@ -16,6 +17,10 @@ interface Link {
   clicks: number;
   created_at: string;
   synced_at: string;
+}
+
+interface LinksTableProps {
+  selectedGroupId?: string;
 }
 
 export function LinksTable() {
@@ -47,6 +52,17 @@ export function LinksTable() {
         ...(filters.startDate && { startDate: filters.startDate }),
         ...(filters.endDate && { endDate: filters.endDate })
       });
+
+      export function LinksTable({ selectedGroupId = 'all' }: LinksTableProps) {
+
+    useEffect(() => {
+    const group = PREDEFINED_GROUPS.find(g => g.id === selectedGroupId);
+    if (group) {
+      const groupFilters = applyGroupFilters(group);
+      setFilters(groupFilters);
+      setPage(0);
+    }
+  }, [selectedGroupId]);
       
       const response = await fetch(`/api/links?${params}`);
       const data = await response.json();
