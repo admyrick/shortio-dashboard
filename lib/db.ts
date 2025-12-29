@@ -16,12 +16,17 @@ export async function query(text: string, params?: any[]) {
 export async function getLinks(filters?: {
   search?: string;
   domain?: string;
+  domains?: string[];
   startDate?: string;
   endDate?: string;
+  minClicks?: number;
+  maxClicks?: number;
+  hasTitle?: boolean;
+  searchKeywords?: string[];
   limit?: number;
   offset?: number;
 }) {
-  const { search, domain, startDate, endDate, limit = 50, offset = 0 } = filters || {};
+  const { search, domain, domains, startDate, endDate, minClicks, maxClicks, hasTitle, searchKeywords, limit = 50, offset = 0 } = filters || {};
   
   let whereClause = '';
   const params: any[] = [];
@@ -40,6 +45,12 @@ export async function getLinks(filters?: {
     params.push(domain);
     paramCount++;
   }
+
+  if (domains && domains.length > 0) {
+    conditions.push(`domain = ANY($${paramCount})`);
+    params.push(domains);
+    paramCount++;
+  }
   
   if (startDate) {
     conditions.push(`created_at >= $${paramCount}`);
@@ -51,6 +62,36 @@ export async function getLinks(filters?: {
     conditions.push(`created_at <= $${paramCount}`);
     params.push(endDate);
     paramCount++;
+  }
+
+  if (minClicks !== undefined) {
+    conditions.push(`clicks >= $${paramCount}`);
+    params.push(minClicks);
+    paramCount++;
+  }
+
+  if (maxClicks !== undefined) {
+    conditions.push(`clicks <= $${paramCount}`);
+    params.push(maxClicks);
+    paramCount++;
+  }
+
+  if (hasTitle !== undefined) {
+    if (hasTitle) {
+      conditions.push(`title IS NOT NULL AND title != ''`);
+    } else {
+      conditions.push(`(title IS NULL OR title = '')`);
+    }
+  }
+
+  if (searchKeywords && searchKeywords.length > 0) {
+    const keywordConditions = searchKeywords.map(keyword => {
+      const condition = `(title ILIKE $${paramCount} OR original_url ILIKE $${paramCount})`;
+      params.push(`%${keyword}%`);
+      paramCount++;
+      return condition;
+    });
+    conditions.push(`(${keywordConditions.join(' OR ')})`);
   }
   
   if (conditions.length > 0) {
