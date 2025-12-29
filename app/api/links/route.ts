@@ -21,8 +21,11 @@ export async function GET(request: NextRequest) {
       const domain = searchParams.get('domain') || undefined;
       const startDate = searchParams.get('startDate') || undefined;
       const endDate = searchParams.get('endDate') || undefined;
+      const minClicks = searchParams.get('minClicks') ? parseInt(searchParams.get('minClicks')!) : undefined;
+      const maxClicks = searchParams.get('maxClicks') ? parseInt(searchParams.get('maxClicks')!) : undefined;
+      const hasTitle = searchParams.get('hasTitle') ? searchParams.get('hasTitle') === 'true' : undefined;
       
-      const links = await exportLinksToCSV({ search, domain, startDate, endDate });
+      const links = await exportLinksToCSV({ search, domain, startDate, endDate, minClicks, maxClicks, hasTitle });
       
       // Convert to CSV
       const headers = ['Short URL', 'Original URL', 'Title', 'Domain', 'Path', 'Clicks', 'Created At', 'Updated At'];
@@ -54,10 +57,13 @@ export async function GET(request: NextRequest) {
     const domain = searchParams.get('domain') || undefined;
     const startDate = searchParams.get('startDate') || undefined;
     const endDate = searchParams.get('endDate') || undefined;
+    const minClicks = searchParams.get('minClicks') ? parseInt(searchParams.get('minClicks')!) : undefined;
+    const maxClicks = searchParams.get('maxClicks') ? parseInt(searchParams.get('maxClicks')!) : undefined;
+    const hasTitle = searchParams.get('hasTitle') ? searchParams.get('hasTitle') === 'true' : undefined;
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
     
-    const result = await getLinks({ search, domain, startDate, endDate, limit, offset });
+    const result = await getLinks({ search, domain, startDate, endDate, minClicks, maxClicks, hasTitle, limit, offset });
     return NextResponse.json(result);
     
   } catch (error) {
