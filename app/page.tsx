@@ -6,6 +6,9 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { GroupsSidebar } from '@/components/GroupsSidebar';
 import { useState } from 'react';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedGroup, setSelectedGroup] = useState('all');
