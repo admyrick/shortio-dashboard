@@ -23,7 +23,7 @@ interface LinksTableProps {
   selectedGroupId?: string;
 }
 
-export function LinksTable() {
+export function LinksTable({ selectedGroupId = 'all' }: LinksTableProps) {
   const [links, setLinks] = useState<Link[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [search, setSearch] = useState('');
@@ -52,8 +52,6 @@ export function LinksTable() {
         ...(filters.startDate && { startDate: filters.startDate }),
         ...(filters.endDate && { endDate: filters.endDate })
       });
-
-      export function LinksTable({ selectedGroupId = 'all' }: LinksTableProps) {
 
     useEffect(() => {
     const group = PREDEFINED_GROUPS.find(g => g.id === selectedGroupId);
