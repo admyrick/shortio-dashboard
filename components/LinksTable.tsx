@@ -54,13 +54,13 @@ export function LinksTable({ selectedGroupId = 'all' }: LinksTableProps) {
       });
 
     useEffect(() => {
-    const group = PREDEFINED_GROUPS.find(g => g.id === selectedGroupId);
-    if (group) {
-      const groupFilters = applyGroupFilters(group);
-      setFilters(groupFilters);
-      setPage(0);
-    }
-  }, [selectedGroupId]);
+  const group = PREDEFINED_GROUPS.find(g => g.id === selectedGroupId);
+  if (group) {
+    const groupFilters = applyGroupFilters(group);
+    setFilters(groupFilters);
+    setPage(0);
+  }
+}, [selectedGroupId]);
       
       const response = await fetch(`/api/links?${params}`);
       const data = await response.json();
